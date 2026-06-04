@@ -5,7 +5,7 @@ import pandas as pd
 from PIL import Image
 
 
-from Task1 import load_and_clean, compute_aggregration, filtered_kpis
+from Data_Handling import load_and_clean, compute_aggregration, filtered_kpis
 
 
 KAYFA_BLUE       = "#1A5AFF"

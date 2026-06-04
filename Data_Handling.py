@@ -119,14 +119,14 @@ def compute_aggregration(df: pd.DataFrame)-> dict:
     return aggs
  
 def filtered_kpis(df_filtered: pd.DataFrame) -> dict:
-    n = len(df_filtered)
-    if n == 0:
-        return {"total": 0, "rate": 0.0, "avg_income": 0.0, "avg_tenure": 0.0}
- 
-    return {
-        "total":      n,
-        "rate":       df_filtered["attrition"].mean() * 100,
-        "avg_income": df_filtered["monthly_income"].mean(),
-        "avg_tenure": df_filtered["years_at_company"].mean(),
-    }
- 
+        n = len(df_filtered)
+        if n == 0:
+            return {"total": 0, "rate": 0.0, "avg_income": 0.0, "avg_tenure": 0.0}
+    
+        return {
+            "total":      n,
+            "rate":       df_filtered["attrition"].mean() * 100,
+            "avg_income": df_filtered["monthly_income"].mean(),
+            "avg_tenure": df_filtered["years_at_company"].mean(),
+        }
+    
