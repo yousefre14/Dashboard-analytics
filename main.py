@@ -982,7 +982,7 @@ def page_overview():
 # NAVIGATION
 pg = st.navigation({
     "📊 Dashboard": [
-        st.Page(page_overview, title="Overview", logo , default=True),
+        st.Page(page_overview, title="Overview", icon="🏠", default=True),
     ],
 })
 
