@@ -1,10 +1,3 @@
-main.py  —  HR Attrition Dashboard
-Kayfa AI & Data Analytics Internship · Week 1
-
-Run:    streamlit run main.py
-Deploy: GitHub → share.streamlit.io  (requires streamlit>=1.36.0)
-"""
-
 import streamlit as st
 import plotly.express as px
 import plotly.graph_objects as go
