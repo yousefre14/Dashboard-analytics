@@ -802,7 +802,7 @@ def page_pay_level():
         fig.update_coloraxes(showscale=False)
         fig.update_layout(xaxis_title="Job Level", yaxis_title="Attrition Rate (%)")
         _add_avg_line(fig, overall_rate)
-        st.plotly_chart(_theme(fig), width='stretch)
+        st.plotly_chart(_theme(fig), width= stretch)
 
         entry = _safe_first(jl[jl["Job Level"]=="Entry"]["Attrition Rate (%)"])
         senior = _safe_first(jl[jl["Job Level"]=="Senior"]["Attrition Rate (%)"])
@@ -832,7 +832,7 @@ def page_pay_level():
                 legend_title="Job Level",
             )
             _add_avg_line(fig, overall_rate)
-            st.plotly_chart(_theme(fig), width='stretch)
+            st.plotly_chart(_theme(fig), width= stretch)
 
     _insight(
         "Within the same job level, bottom → top pay quartile reduces attrition by only "
@@ -863,7 +863,7 @@ def page_pay_level():
     )
     fig.update_layout(xaxis_title="", yaxis_title="Monthly Income ($)",
                       showlegend=False)
-    st.plotly_chart(_theme(fig), width='stretch)
+    st.plotly_chart(_theme(fig), width= stretch)
     _insight(
         "Leavers and stayers have nearly identical income distributions "
         "(median gap < 1%). <b>Compensation is NOT the primary driver.</b> "
@@ -900,7 +900,7 @@ def page_engagement():
         fig.update_layout(xaxis_title="Years at Company",
                           yaxis_title="Attrition Rate (%)")
         _add_avg_line(fig, overall_rate)
-        st.plotly_chart(_theme(fig), width='stretch)
+        st.plotly_chart(_theme(fig), width= stretch)
 
         peak_band = tenure_data.loc[tenure_data["Attrition Rate (%)"].idxmax()]
         low_band  = tenure_data.loc[tenure_data["Attrition Rate (%)"].idxmin()]
@@ -952,7 +952,7 @@ def page_engagement():
             yaxis_title="Work-Life Balance",
             height=400,
         )
-        st.plotly_chart(_theme(fig), width='stretch)
+        st.plotly_chart(_theme(fig), width= stretch)
 
         _insight(
             "Danger zone: <b>Poor WLB + Low Satisfaction = 67.0%</b> attrition. "
@@ -986,7 +986,7 @@ def page_engagement():
             fig.update_traces(texttemplate="%{text:.1f}%", textposition="outside")
             fig.update_coloraxes(showscale=False)
             _add_avg_line(fig, overall_rate)
-            st.plotly_chart(_theme(fig), width='stretch)
+            st.plotly_chart(_theme(fig), width= stretch)
 
     with c2:
         marital_data = q.get("attrition_by_marital", pd.DataFrame())
@@ -1001,7 +1001,7 @@ def page_engagement():
             fig.update_traces(texttemplate="%{text:.1f}%", textposition="outside")
             fig.update_layout(showlegend=False)
             _add_avg_line(fig, overall_rate)
-            st.plotly_chart(_theme(fig), width='stretch)
+            st.plotly_chart(_theme(fig), width= stretch)
 
     with c3:
         dep_data = q.get("attrition_by_dependents", pd.DataFrame())
@@ -1013,7 +1013,7 @@ def page_engagement():
             )
             fig.update_traces(line_color=KB, marker_color=KB, marker_size=8)
             _add_avg_line(fig, overall_rate)
-            st.plotly_chart(_theme(fig), width='stretch)
+            st.plotly_chart(_theme(fig), width= stretch)
 
     _insight(
         "Highest-risk: <b>young, single employees (18–25)</b> — 53.1% (age) × 66.8% (marital). "
@@ -1057,7 +1057,7 @@ def page_career():
                 xaxis_title="Number of Promotions Received",
                 yaxis_title="Attrition Rate (%)",
             )
-            st.plotly_chart(_theme(fig), width='stretch)
+            st.plotly_chart(_theme(fig), width= stretch)
 
             p0 = _safe_first(
                 promo_data[promo_data["Number of Promotions"]==0]["Attrition Rate (%)"])
@@ -1094,7 +1094,7 @@ def page_career():
                                   yaxis_title="Attrition Rate (%)",
                                   showlegend=False)
                 _add_avg_line(fig, overall_rate)
-                st.plotly_chart(_theme(fig), width='stretch)
+                st.plotly_chart(_theme(fig), width= stretch)
 
     st.markdown("---")
     _section("The 'Fully Stuck' Profile")
@@ -1188,7 +1188,7 @@ def page_risk():
         fig.update_traces(texttemplate="%{text:.1f}%", textposition="outside")
         fig.update_coloraxes(showscale=False)
         _add_avg_line(fig, overall_rate)
-        st.plotly_chart(_theme(fig), width='stretch)
+        st.plotly_chart(_theme(fig), width= stretch)
 
     with c2:
         comparison = pd.DataFrame({
@@ -1204,7 +1204,7 @@ def page_risk():
         )
         fig.update_traces(texttemplate="%{text:.1f}%", textposition="outside")
         fig.update_layout(showlegend=False, xaxis_title="")
-        st.plotly_chart(_theme(fig), width='stretch)
+        st.plotly_chart(_theme(fig), width= stretch)
 
     _insight(
         f"This profile shows <b>{risk_rate:.1f}%</b> attrition — "
@@ -1243,7 +1243,7 @@ def page_risk():
             xaxis_title="Attrition Rate Difference (percentage points)",
             yaxis_title="",
         )
-        st.plotly_chart(_theme(fig), width='stretch)
+        st.plotly_chart(_theme(fig), width= stretch)
 
     st.markdown("### 🏆 Ranked Recommendations")
     r1, r2, r3 = st.columns(3)
