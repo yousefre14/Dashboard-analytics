@@ -536,33 +536,33 @@ def page_overview():
     st.markdown("---")
         
         # CHART 2: Workforce Split (PIE)
-        stayed = int((dff["attrition"] == 0).sum())
-        left = int((dff["attrition"] == 1).sum())
-        total = stayed + left
-        
-        fig = go.Figure(go.Pie(
-            labels=["Stayed", "Left"], 
-            values=[stayed, left], 
-            hole=0.62,
-            marker=dict(
-                colors=[KB_LIGHT, KB],
-                line=dict(color='white', width=2)
-            ),
-            textinfo="percent+label",
-            textposition="auto",
-            textfont=dict(size=13, color="white"),
-        ))
-        fig.update_layout(
-            title="Workforce Split",
-            height=450 + (len(role_data) * 20),
-            margin=dict(l=100, r=50, t=80, b=50),
-            annotations=[dict(
-                text=f"<b>{_safe_pct(left, total):.1f}%</b><br>Left",
-                x=0.5, y=0.5, font=dict(size=16, color=KB), showarrow=False,
-            )],
-        )
-        st.plotly_chart(_theme(fig), use_container_width=True)
-        _insight(f"<b>{left:,}</b> left · <b>{stayed:,}</b> retained")
+    stayed = int((dff["attrition"] == 0).sum())
+    left = int((dff["attrition"] == 1).sum())
+    total = stayed + left
+    
+    fig = go.Figure(go.Pie(
+        labels=["Stayed", "Left"], 
+        values=[stayed, left], 
+        hole=0.62,
+        marker=dict(
+            colors=[KB_LIGHT, KB],
+            line=dict(color='white', width=2)
+        ),
+        textinfo="percent+label",
+        textposition="auto",
+        textfont=dict(size=13, color="white"),
+    ))
+    fig.update_layout(
+        title="Workforce Split",
+        height=450 + (len(role_data) * 20),
+        margin=dict(l=100, r=50, t=80, b=50),
+        annotations=[dict(
+            text=f"<b>{_safe_pct(left, total):.1f}%</b><br>Left",
+            x=0.5, y=0.5, font=dict(size=16, color=KB), showarrow=False,
+        )],
+    )
+    st.plotly_chart(_theme(fig), use_container_width=True)
+    _insight(f"<b>{left:,}</b> left · <b>{stayed:,}</b> retained")
     
     # Q2: OVERTIME
     with tab2:
