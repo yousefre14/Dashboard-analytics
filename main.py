@@ -1,15 +1,3 @@
-"""
-main.py  —  HR Attrition Dashboard (CLEAN & FOCUSED)
-Kayfa AI & Data Analytics Internship · Week 1
-
-FEATURES:
-  ✓ Minimal sidebar (filters only)
-  ✓ Single-color charts (no rainbow colors)
-  ✓ Large, zoomed-in charts
-  ✓ All 10 questions in tabs
-  ✓ Professional, clean design
-"""
-
 import streamlit as st
 import plotly.express as px
 import plotly.graph_objects as go
@@ -26,9 +14,7 @@ from Data_Handling import (
     test_data_completeness, test_aggregation_output,
 )
 
-# ─────────────────────────────────────────────────────────────────────────────
 # PAGE CONFIG
-# ─────────────────────────────────────────────────────────────────────────────
 st.set_page_config(
     page_title="Workforce Retention Intelligence · Kayfa",
     page_icon="📊",
@@ -36,9 +22,7 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# ─────────────────────────────────────────────────────────────────────────────
 # BRAND CONSTANTS
-# ─────────────────────────────────────────────────────────────────────────────
 KB        = "#1A5AFF"
 KB_DARK   = "#1245CC"
 KB_LIGHT  = "#E8EFFF"
@@ -49,9 +33,7 @@ WHITE     = "#FFFFFF"
 DARK_BG   = "#0F1419"
 ATTRITION_MAP = {"Stayed": KB_LIGHT, "Left": KB}
 
-# ─────────────────────────────────────────────────────────────────────────────
 # CLEAN CSS - MINIMAL SIDEBAR
-# ─────────────────────────────────────────────────────────────────────────────
 CSS = """
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
@@ -285,12 +267,9 @@ footer {
 
 st.markdown(CSS, unsafe_allow_html=True)
 
-# ─────────────────────────────────────────────────────────────────────────────
 # LOGO LOADER
-# ─────────────────────────────────────────────────────────────────────────────
 @st.cache_data
 def load_logo():
-    """Load logo from local file or GitHub."""
     try:
         logo = Image.open("company_logo2.png")
         return logo
@@ -305,9 +284,7 @@ def load_logo():
 
 logo = load_logo()
 
-# ─────────────────────────────────────────────────────────────────────────────
 # PLOTLY THEME - SINGLE COLOR, LARGER CHARTS
-# ─────────────────────────────────────────────────────────────────────────────
 _LAYOUT = dict(
     paper_bgcolor="rgba(0,0,0,0)",
     plot_bgcolor="rgba(0,0,0,0)",
@@ -365,9 +342,7 @@ def _safe_pct(num: float, denom: float, fallback: float = 0.0) -> float:
 def _safe_first(series: pd.Series, fallback: float = 0.0) -> float:
     return float(series.values[0]) if len(series) > 0 else fallback
 
-# ─────────────────────────────────────────────────────────────────────────────
 # DATA LOADING
-# ─────────────────────────────────────────────────────────────────────────────
 @st.cache_data(show_spinner="🔄 Loading data…")
 def get_data():
     try:
@@ -379,15 +354,13 @@ def get_data():
         test_aggregation_output(aggs, q, overall_rate)
         return df, aggs, q
     except Exception as e:
-        st.error(f"❌ Data Loading Failed: {str(e)}")
+        st.error(f"Data Loading Failed: {str(e)}")
         st.stop()
 
 df, aggs, q = get_data()
 overall_rate = aggs["overall_rate"] * 100
 
-# ─────────────────────────────────────────────────────────────────────────────
-# MINIMAL SIDEBAR - FILTERS ONLY
-# ─────────────────────────────────────────────────────────────────────────────
+# SIDEBAR 
 with st.sidebar:
     st.markdown("### 🔍 Filters")
     
@@ -407,9 +380,7 @@ with st.sidebar:
     sel_remote = st.radio("Work Location", ["All", "Remote Only", "On-site Only"], index=0)
     sel_ot = st.radio("Overtime", ["All", "With Overtime", "No Overtime"], index=0)
 
-# ─────────────────────────────────────────────────────────────────────────────
 # FILTER MASK
-# ─────────────────────────────────────────────────────────────────────────────
 mask = (
     df["job_role"].isin(sel_roles)
     & df["gender"].isin(sel_genders)
@@ -434,9 +405,7 @@ if len(dff) == 0:
 
 kpis = filtered_kpis(dff)
 
-# ─────────────────────────────────────────────────────────────────────────────
 # SHARED KPI ROW
-# ─────────────────────────────────────────────────────────────────────────────
 def _kpi_row():
     delta = kpis["rate"] - overall_rate
     sign = "▲" if delta > 0 else "▼"
@@ -477,9 +446,7 @@ def _kpi_row():
             unsafe_allow_html=True,
         )
 
-# ═════════════════════════════════════════════════════════════════════════════
 # PAGE 1: OVERVIEW WITH TABS
-# ═════════════════════════════════════════════════════════════════════════════
 def page_overview():
     col_title, _, col_logo = st.columns([6, 1, 2])
     with col_title:
@@ -491,7 +458,7 @@ def page_overview():
         )
     with col_logo:
         if logo is not None:
-            st.image(logo, width=120)
+            st.image(logo, width=420)
         else:
             st.markdown(
                 "<div style='text-align:center;font-size:2.2rem;font-weight:900;color:#1A5AFF;'>كيف</div>",
@@ -502,27 +469,23 @@ def page_overview():
     _kpi_row()
     st.markdown("---")
     
-    # ════════════════════════════════════════════════════════════════════════
     # TABBED QUESTIONS
-    # ════════════════════════════════════════════════════════════════════════
     tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10 = st.tabs([
-        "Q1: Headline",
-        "Q2: Overtime",
-        "Q3: Remote Work",
-        "Q4: Pay Fairness",
-        "Q5: Timeline",
-        "Q6: Engagement",
-        "Q7: Life Stage",
-        "Q8: Stagnation",
-        "Q9: Risk Profile",
-        "Q10: Drivers"
+        "Headline",
+        "Overtime",
+        "Remote Work",
+        "Pay Fairness",
+        "Timeline",
+        "Engagement",
+        "Life Stage",
+        "Stagnation",
+        "Risk Profile",
+        "Drivers"
     ])
     
-    # ────────────────────────────────────────────────────────────────────────
     # Q1: THE HEADLINE
-    # ────────────────────────────────────────────────────────────────────────
     with tab1:
-        _qbadge("Q1 · The Headline")
+        _qbadge("The Headline")
         _section("Who Is Leaving — and Where to Look First")
         
         c1, c2 = st.columns([1.5, 1])
@@ -588,11 +551,9 @@ def page_overview():
             st.plotly_chart(_theme(fig, height=450), width='stretch')
             _insight(f"<b>{left:,}</b> left · <b>{stayed:,}</b> retained")
     
-    # ────────────────────────────────────────────────────────────────────────
     # Q2: OVERTIME
-    # ────────────────────────────────────────────────────────────────────────
     with tab2:
-        _qbadge("Q2 · Overtime Burden")
+        _qbadge("Overtime Burden")
         _section("Are Employees Who Work Overtime More Likely to Leave?")
         
         ot = (
@@ -637,7 +598,7 @@ def page_overview():
     # Q3: REMOTE WORK
     # ────────────────────────────────────────────────────────────────────────
     with tab3:
-        _qbadge("Q3 · Remote Work Policy")
+        _qbadge("Remote Work Policy")
         _section("Does Remote Work Keep People?")
         
         remote = (
@@ -679,11 +640,9 @@ def page_overview():
             _insight(f"<b>{r_remote:.1f}%</b> vs <b>{r_onsite:.1f}%</b> — <b>{gap:.1f}pp gap</b>")
             _cta("<b>🎯 Action:</b> 90-day pilot for on-site roles.")
     
-    # ────────────────────────────────────────────────────────────────────────
     # Q4: PAY FAIRNESS
-    # ────────────────────────────────────────────────────────────────────────
     with tab4:
-        _qbadge("Q4 · Pay Fairness Within Job Levels")
+        _qbadge("Pay Fairness Within Job Levels")
         _section("Does Higher Pay Within a Level Reduce Attrition?")
         
         jl = (
@@ -736,11 +695,9 @@ def page_overview():
         
         _cta("<b>🎯 Action:</b> Invest in promotion pathways, not salary hikes.")
     
-    # ────────────────────────────────────────────────────────────────────────
     # Q5: RETENTION TIMELINE
-    # ────────────────────────────────────────────────────────────────────────
     with tab5:
-        _qbadge("Q5 · Retention Timeline")
+        _qbadge("Retention Timeline")
         _section("When Are Employees Most Likely to Leave?")
         
         tenure_data = q.get("attrition_by_tenure", pd.DataFrame())
@@ -766,11 +723,9 @@ def page_overview():
             _insight(f"Peak at <b>{peak['tenure_band']}</b> (<b>{peak['Attrition Rate (%)']:.1f}%</b>)")
             _cta("<b>🎯 Action:</b> Target 0–5yr with enhanced onboarding.")
     
-    # ────────────────────────────────────────────────────────────────────────
     # Q6: ENGAGEMENT WARNING SIGNS
-    # ────────────────────────────────────────────────────────────────────────
     with tab6:
-        _qbadge("Q6 · Engagement Warning Signs")
+        _qbadge("Engagement Warning Signs")
         _section("Which WLB + Satisfaction Combo Is the Danger Zone?")
         
         cross_data = q.get("wlb_x_satisfaction", pd.DataFrame())
@@ -808,11 +763,9 @@ def page_overview():
             _insight("Danger: <b>Poor WLB + Low Satisfaction = 67%</b> attrition. WLB is dominant.")
             _cta("<b>🎯 Action:</b> Flag Poor/Fair WLB in pulse checks.")
     
-    # ────────────────────────────────────────────────────────────────────────
     # Q7: LIFE STAGE
-    # ────────────────────────────────────────────────────────────────────────
     with tab7:
-        _qbadge("Q7 · Life Stage Factors")
+        _qbadge("Life Stage Factors")
         _section("Do Age, Marital Status, and Dependents Matter?")
         
         c1, c2, c3 = st.columns(3)
@@ -873,11 +826,9 @@ def page_overview():
         _insight("Highest-risk: young, single. With dependents = stable.")
         _cta("<b>🎯 Action:</b> Community programs for young employees.")
     
-    # ────────────────────────────────────────────────────────────────────────
     # Q8: CAREER STAGNATION
-    # ────────────────────────────────────────────────────────────────────────
     with tab8:
-        _qbadge("Q8 · Career Stagnation")
+        _qbadge("Career Stagnation")
         _section("Does Feeling Stuck Drive Attrition?")
         
         c1, c2 = st.columns([1.5, 1])
@@ -926,11 +877,9 @@ def page_overview():
         _risk(f"<b>{stuck_n:,}</b> fully stuck: 0 promos + no leadership + no innovation = <b>{stuck_rate:.1f}%</b> attrition.")
         _cta(f"<b>🎯 Action:</b> 90-day dev plans for {stuck_n:,} employees.")
     
-    # ────────────────────────────────────────────────────────────────────────
     # Q9: HIGHEST-RISK PROFILE
-    # ────────────────────────────────────────────────────────────────────────
     with tab9:
-        _qbadge("Q9 · Highest-Risk Profile")
+        _qbadge("Highest-Risk Profile")
         _section("Who Is Most Likely to Leave?")
         
         risk_n = q.get("risk_profile_n", 0)
@@ -986,11 +935,9 @@ def page_overview():
         
         _cta(f"<b>🎯 Action:</b> HR touchpoint for {risk_n:,} within 30 days.")
     
-    # ────────────────────────────────────────────────────────────────────────
     # Q10: WHAT MOVES THE NEEDLE
-    # ────────────────────────────────────────────────────────────────────────
     with tab10:
-        _qbadge("Q10 · What Moves the Needle")
+        _qbadge("What Moves the Needle")
         _section("If HR Could Fix One Thing Next Quarter...")
         
         drivers = q.get("driver_ranking", pd.DataFrame())
@@ -1032,47 +979,10 @@ def page_overview():
                 unsafe_allow_html=True,
             )
 
-# ═════════════════════════════════════════════════════════════════════════════
-# OTHER PAGES
-# ═════════════════════════════════════════════════════════════════════════════
-def page_workload():
-    st.markdown("## ⏰ Workload & Flexibility")
-    _kpi_row()
-    st.info("📊 See Q2 & Q3 in Overview for detailed analysis")
-
-def page_pay():
-    st.markdown("## 💰 Pay & Job Level")
-    _kpi_row()
-    st.info("📊 See Q4 in Overview for detailed analysis")
-
-def page_engagement():
-    st.markdown("## 🧠 Engagement & Life Stage")
-    _kpi_row()
-    st.info("📊 See Q5, Q6 & Q7 in Overview for detailed analysis")
-
-def page_career():
-    st.markdown("## 🚀 Career Growth")
-    _kpi_row()
-    st.info("📊 See Q8 in Overview for detailed analysis")
-
-def page_risk():
-    st.markdown("## 🎯 Risk & Strategy")
-    _kpi_row()
-    st.info("📊 See Q9 & Q10 in Overview for detailed analysis")
-
-# ─────────────────────────────────────────────────────────────────────────────
 # NAVIGATION
-# ─────────────────────────────────────────────────────────────────────────────
 pg = st.navigation({
     "📊 Dashboard": [
-        st.Page(page_overview, title="Overview", icon="🏠", default=True),
-    ],
-    "🔍 Analysis": [
-        st.Page(page_workload, title="Workload & Flexibility", icon="⏰"),
-        st.Page(page_pay, title="Pay & Job Level", icon="💰"),
-        st.Page(page_engagement, title="Engagement & Life Stage", icon="🧠"),
-        st.Page(page_career, title="Career Growth", icon="🚀"),
-        st.Page(page_risk, title="Risk & Strategy", icon="🎯"),
+        st.Page(page_overview, title="Overview", logo , default=True),
     ],
 })
 
