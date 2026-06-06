@@ -1,16 +1,13 @@
 """
-main.py  —  HR Attrition Dashboard (COMPLETE - ALL 10 QUESTIONS)
+main.py  —  HR Attrition Dashboard (CLEAN & FOCUSED)
 Kayfa AI & Data Analytics Internship · Week 1
 
 FEATURES:
-  ✓ All 10 questions fully answered (Q1-Q10)
-  ✓ Logo visibility fixed (white background)
-  ✓ Improved sidebar colors with UX principles
-  ✓ Enhanced attrition chart with better styling
-  ✓ Homepage tabs for each question
-  ✓ width='stretch' parameter (Streamlit latest)
-  ✓ Professional CSS/HTML
-  ✓ Dark/light theme support
+  ✓ Minimal sidebar (filters only)
+  ✓ Single-color charts (no rainbow colors)
+  ✓ Large, zoomed-in charts
+  ✓ All 10 questions in tabs
+  ✓ Professional, clean design
 """
 
 import streamlit as st
@@ -50,11 +47,10 @@ GREEN     = "#16A34A"
 RED       = "#DC2626"
 WHITE     = "#FFFFFF"
 DARK_BG   = "#0F1419"
-BLUE_SEQ  = [KB_LIGHT, "#BDD0FF", "#7FA8FF", "#4C84FF", KB, KB_DARK, "#0D31A3", "#081F7A"]
 ATTRITION_MAP = {"Stayed": KB_LIGHT, "Left": KB}
 
 # ─────────────────────────────────────────────────────────────────────────────
-# ENHANCED CSS WITH BETTER UX
+# CLEAN CSS - MINIMAL SIDEBAR
 # ─────────────────────────────────────────────────────────────────────────────
 CSS = """
 <style>
@@ -64,19 +60,32 @@ CSS = """
     font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
-/* ── SIDEBAR STYLING (UX: High Contrast) ── */
+/* ── SIDEBAR - MINIMAL ── */
 section[data-testid="stSidebar"] {
     background: linear-gradient(135deg, #1A5AFF 0%, #1245CC 100%) !important;
-    width: 300px !important;
-    box-shadow: 2px 0 10px rgba(26, 90, 255, 0.2);
+    width: 280px !important;
 }
 
 section[data-testid="stSidebar"] > div:first-child {
-    width: 300px !important;
+    width: 280px !important;
 }
 
 section[data-testid="stSidebar"] * {
     color: #FFFFFF !important;
+}
+
+/* Hide sidebar header/logo area - CLEAN */
+section[data-testid="stSidebar"] [data-testid="stVerticalBlockBorderWrapper"]:first-child {
+    display: none !important;
+}
+
+section[data-testid="stSidebar"] > div:first-child > div:first-child {
+    padding-top: 1rem !important;
+}
+
+section[data-testid="stSidebar"] hr {
+    border-color: rgba(255,255,255,0.3) !important;
+    margin: 0.8rem 0 !important;
 }
 
 section[data-testid="stSidebar"] h1, 
@@ -84,70 +93,20 @@ section[data-testid="stSidebar"] h2,
 section[data-testid="stSidebar"] h3 {
     color: #FFFFFF !important;
     font-weight: 700;
+    margin-bottom: 0.8rem;
 }
 
-section[data-testid="stSidebar"] hr {
-    border-color: rgba(255,255,255,0.3) !important;
-    margin: 1rem 0 !important;
-}
-
-/* ── LOGO CONTAINER (White background for visibility) ── */
-.sidebar-logo-fixed {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: rgba(255,255,255,0.95);
-    backdrop-filter: blur(10px);
-    padding: 1.2rem 0.8rem;
-    border-bottom: 3px solid #1A5AFF;
-    border-radius: 8px;
-    margin-bottom: 1.5rem;
-    text-align: center;
-    box-shadow: 0 4px 12px rgba(26,90,255,0.15);
-}
-
-.sidebar-logo-fixed img {
-    max-width: 140px;
-    height: auto;
-    border-radius: 6px;
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
-}
-
-.sidebar-logo-text {
-    font-size: 1.8rem;
-    font-weight: 900;
-    color: #1A5AFF;
-    letter-spacing: -1px;
-    margin: 0;
-}
-
-.sidebar-logo-subtitle {
-    font-size: 0.75rem;
-    color: #1245CC;
-    margin-top: 0.25rem;
-    font-weight: 600;
-}
-
-/* ── FILTERS SECTION (Better contrast) ── */
+/* Filter Styling */
 section[data-testid="stSidebar"] .stMultiSelect [data-baseweb="tag"] {
     background: rgba(255,255,255,0.2) !important;
     color: white !important;
-    border: 1px solid rgba(255,255,255,0.3) !important;
     border-radius: 4px !important;
-    font-weight: 500;
 }
 
 section[data-testid="stSidebar"] [data-baseweb="select"] > div {
     background: rgba(255,255,255,0.15) !important;
-    border: 2px solid rgba(255,255,255,0.25) !important;
-    border-radius: 6px !important;
+    border: 1px solid rgba(255,255,255,0.25) !important;
     color: white !important;
-    font-weight: 500;
-}
-
-section[data-testid="stSidebar"] [data-baseweb="select"] > div:hover {
-    background: rgba(255,255,255,0.2) !important;
-    border-color: rgba(255,255,255,0.4) !important;
 }
 
 section[data-testid="stSidebar"] .stRadio > label {
@@ -155,27 +114,14 @@ section[data-testid="stSidebar"] .stRadio > label {
     font-weight: 500;
 }
 
-section[data-testid="stSidebar"] .stRadio > label:hover {
-    color: #E8EFFF !important;
-}
-
 section[data-testid="stSidebar"] .stSlider > label {
-    color: white !important;
-    font-weight: 500;
-}
-
-section[data-testid="stSidebar"] .stSlider > div {
     color: white !important;
 }
 
 /* ── MAIN CONTENT ── */
-.main {
-    max-width: 100% !important;
-}
-
 [data-testid="stMainBlockContainer"] {
-    padding-left: 2rem !important;
-    padding-right: 2rem !important;
+    padding-left: 2.5rem !important;
+    padding-right: 2.5rem !important;
 }
 
 /* ── INSIGHT BOX ── */
@@ -184,7 +130,7 @@ section[data-testid="stSidebar"] .stSlider > div {
     border-left: 4px solid #1A5AFF;
     border-radius: 8px;
     padding: 0.85rem 1.1rem;
-    margin: 0.5rem 0;
+    margin: 0.8rem 0;
     font-size: 0.84rem;
     line-height: 1.55;
 }
@@ -200,7 +146,7 @@ section[data-testid="stSidebar"] .stSlider > div {
     border-left: 4px solid #16A34A;
     border-radius: 8px;
     padding: 0.85rem 1.1rem;
-    margin: 0.5rem 0;
+    margin: 0.8rem 0;
     font-size: 0.84rem;
     line-height: 1.55;
 }
@@ -237,7 +183,6 @@ section[data-testid="stSidebar"] .stSlider > div {
     padding: 2px 9px;
     margin-bottom: 0.3rem;
     text-transform: uppercase;
-    box-shadow: 0 2px 4px rgba(26,90,255,0.2);
 }
 
 /* ── SECTION TITLE ── */
@@ -272,12 +217,6 @@ section[data-testid="stSidebar"] .stSlider > div {
     border-radius: 8px;
     padding: 1rem 1.2rem;
     box-shadow: 0 2px 8px rgba(26,90,255,0.1);
-    transition: all 0.3s ease;
-}
-
-.kpi-card:hover {
-    box-shadow: 0 4px 12px rgba(26,90,255,0.15);
-    transform: translateY(-2px);
 }
 
 .kpi-num {
@@ -303,12 +242,6 @@ section[data-testid="stSidebar"] .stSlider > div {
     border-radius: 6px;
     padding: 1rem;
     text-align: center;
-    transition: all 0.3s ease;
-}
-
-.metric-card:hover {
-    border-color: rgba(26,90,255,0.3);
-    background: rgba(26,90,255,0.08);
 }
 
 .metric-value {
@@ -331,26 +264,6 @@ section[data-testid="stSidebar"] .stSlider > div {
     border-radius: 8px;
     padding: 1rem;
     margin-bottom: 0.8rem;
-    transition: all 0.3s ease;
-}
-
-.rec-box:hover {
-    background: rgba(26,90,255,0.1);
-    border-color: rgba(26,90,255,0.4);
-}
-
-/* ── TABS ── */
-.stTabs [data-baseweb="tab-list"] {
-    gap: 0.5rem;
-    background-color: rgba(26,90,255,0.05);
-    padding: 0.5rem;
-    border-radius: 8px;
-    border-bottom: 2px solid rgba(26,90,255,0.1);
-}
-
-.stTabs [aria-selected="true"] {
-    color: #1A5AFF !important;
-    border-bottom: 3px solid #1A5AFF !important;
 }
 
 /* ── FOOTER ── */
@@ -365,9 +278,6 @@ footer {
     }
     .hero-title {
         font-size: 1.4rem;
-    }
-    .kpi-num {
-        font-size: 1.5rem;
     }
 }
 </style>
@@ -396,24 +306,36 @@ def load_logo():
 logo = load_logo()
 
 # ─────────────────────────────────────────────────────────────────────────────
-# PLOTLY THEME
+# PLOTLY THEME - SINGLE COLOR, LARGER CHARTS
 # ─────────────────────────────────────────────────────────────────────────────
 _LAYOUT = dict(
     paper_bgcolor="rgba(0,0,0,0)",
     plot_bgcolor="rgba(0,0,0,0)",
-    font=dict(family="Plus Jakarta Sans, sans-serif", size=11),
-    margin=dict(t=44, b=28, l=8, r=8),
-    legend=dict(bgcolor="rgba(0,0,0,0)"),
+    font=dict(family="Plus Jakarta Sans, sans-serif", size=12),
+    margin=dict(t=50, b=40, l=60, r=40),
+    legend=dict(bgcolor="rgba(0,0,0,0)", font=dict(size=11)),
     hovermode="x unified",
 )
 
-def _theme(fig: go.Figure) -> go.Figure:
-    fig.update_layout(**_LAYOUT)
-    fig.update_xaxes(gridcolor="rgba(26,90,255,0.1)", linecolor="rgba(26,90,255,0.2)", tickfont_size=10)
-    fig.update_yaxes(gridcolor="rgba(26,90,255,0.1)", linecolor="rgba(26,90,255,0.2)", tickfont_size=10)
+def _theme(fig: go.Figure, height: int = 500) -> go.Figure:
+    """Apply Kayfa theme with larger height"""
+    fig.update_layout(**_LAYOUT, height=height)
+    fig.update_xaxes(
+        gridcolor="rgba(26,90,255,0.1)", 
+        linecolor="rgba(26,90,255,0.2)", 
+        tickfont_size=11,
+        showgrid=True
+    )
+    fig.update_yaxes(
+        gridcolor="rgba(26,90,255,0.1)", 
+        linecolor="rgba(26,90,255,0.2)", 
+        tickfont_size=11,
+        showgrid=True
+    )
     return fig
 
 def _add_avg_line(fig: go.Figure, y_val: float, label: str = "Company Average") -> go.Figure:
+    """Add reference line"""
     fig.add_hline(y=y_val, line_dash="dash", line_color=AMBER, line_width=2.5)
     fig.add_trace(go.Scatter(
         x=[None], y=[None], mode="lines",
@@ -446,7 +368,7 @@ def _safe_first(series: pd.Series, fallback: float = 0.0) -> float:
 # ─────────────────────────────────────────────────────────────────────────────
 # DATA LOADING
 # ─────────────────────────────────────────────────────────────────────────────
-@st.cache_data(show_spinner="🔄 Loading & validating data…")
+@st.cache_data(show_spinner="🔄 Loading data…")
 def get_data():
     try:
         df = load_and_clean("train.csv", "test.csv")
@@ -457,48 +379,33 @@ def get_data():
         test_aggregation_output(aggs, q, overall_rate)
         return df, aggs, q
     except Exception as e:
-        st.error(f"❌ **Data Loading Failed**: {str(e)}")
+        st.error(f"❌ Data Loading Failed: {str(e)}")
         st.stop()
 
 df, aggs, q = get_data()
 overall_rate = aggs["overall_rate"] * 100
 
 # ─────────────────────────────────────────────────────────────────────────────
-# SIDEBAR
+# MINIMAL SIDEBAR - FILTERS ONLY
 # ─────────────────────────────────────────────────────────────────────────────
 with st.sidebar:
-    # Logo with white background
-    st.markdown("<div class='sidebar-logo-fixed'>", unsafe_allow_html=True)
-    if logo is not None:
-        st.image(logo, width=130)
-    else:
-        st.markdown(
-            "<p class='sidebar-logo-text'>كيف</p>"
-            "<p class='sidebar-logo-subtitle'>Kayfa AI</p>",
-            unsafe_allow_html=True,
-        )
-    st.markdown("</div>", unsafe_allow_html=True)
-    
-    st.markdown("### 🔍 Filters", unsafe_allow_html=True)
+    st.markdown("### 🔍 Filters")
     
     all_roles   = sorted(df["job_role"].unique().tolist())
     all_genders = sorted(df["gender"].unique().tolist())
     all_levels  = df["job_level"].cat.categories.tolist()
     all_sizes   = df["company_size"].cat.categories.tolist()
     
-    sel_roles   = st.multiselect("🏢 Job Role", all_roles, default=all_roles)
-    sel_genders = st.multiselect("👥 Gender", all_genders, default=all_genders)
-    sel_levels  = st.multiselect("📊 Job Level", all_levels, default=all_levels)
-    sel_sizes   = st.multiselect("🏭 Company Size", all_sizes, default=all_sizes)
+    sel_roles   = st.multiselect("Job Role", all_roles, default=all_roles)
+    sel_genders = st.multiselect("Gender", all_genders, default=all_genders)
+    sel_levels  = st.multiselect("Job Level", all_levels, default=all_levels)
+    sel_sizes   = st.multiselect("Company Size", all_sizes, default=all_sizes)
     
     age_min, age_max = int(df["age"].min()), int(df["age"].max())
-    sel_age = st.slider("👤 Age Range", age_min, age_max, (age_min, age_max))
+    sel_age = st.slider("Age Range", age_min, age_max, (age_min, age_max))
     
-    sel_remote = st.radio("🏠 Work Location", ["All", "Remote Only", "On-site Only"], index=0)
-    sel_ot = st.radio("⏰ Overtime", ["All", "With Overtime", "No Overtime"], index=0)
-    
-    st.markdown("---")
-    st.caption("Week 1 · Data Analytics Track")
+    sel_remote = st.radio("Work Location", ["All", "Remote Only", "On-site Only"], index=0)
+    sel_ot = st.radio("Overtime", ["All", "With Overtime", "No Overtime"], index=0)
 
 # ─────────────────────────────────────────────────────────────────────────────
 # FILTER MASK
@@ -522,7 +429,7 @@ elif sel_ot == "No Overtime":
 dff = df[mask]
 
 if len(dff) == 0:
-    st.warning("⚠️ No employees match current filters. Adjust sidebar.")
+    st.warning("⚠️ No employees match filters. Adjust sidebar.")
     st.stop()
 
 kpis = filtered_kpis(dff)
@@ -571,7 +478,7 @@ def _kpi_row():
         )
 
 # ═════════════════════════════════════════════════════════════════════════════
-# PAGE 1: OVERVIEW WITH TABS (Q1-Q10)
+# PAGE 1: OVERVIEW WITH TABS
 # ═════════════════════════════════════════════════════════════════════════════
 def page_overview():
     col_title, _, col_logo = st.columns([6, 1, 2])
@@ -587,8 +494,7 @@ def page_overview():
             st.image(logo, width=120)
         else:
             st.markdown(
-                "<div style='text-align:center;font-size:2.2rem;font-weight:900;color:#1A5AFF;'>"
-                "كيف</div>",
+                "<div style='text-align:center;font-size:2.2rem;font-weight:900;color:#1A5AFF;'>كيف</div>",
                 unsafe_allow_html=True,
             )
     
@@ -619,7 +525,7 @@ def page_overview():
         _qbadge("Q1 · The Headline")
         _section("Who Is Leaving — and Where to Look First")
         
-        c1, c2 = st.columns([3, 2])
+        c1, c2 = st.columns([1.5, 1])
         
         with c1:
             role_data = (
@@ -636,36 +542,29 @@ def page_overview():
                     y="Job Role", 
                     orientation="h",
                     title="Attrition Rate by Job Role",
-                    color="Attrition Rate (%)", 
-                    color_continuous_scale=BLUE_SEQ,
                     text="Attrition Rate (%)",
-                    labels={"Attrition Rate (%)": "Attrition Rate (%)", "Job Role": "Job Role"},
                 )
                 fig.update_traces(
                     texttemplate="%{x:.1f}%", 
                     textposition="outside",
-                    marker=dict(line=dict(width=0.5, color="rgba(26,90,255,0.3)"))
+                    marker_color=KB,
+                    marker_line=dict(width=0)
                 )
-                fig.update_coloraxes(showscale=False)
                 fig.update_layout(
                     yaxis_title="", 
                     xaxis_title="Attrition Rate (%)",
-                    height=350
+                    showlegend=False
                 )
                 _add_avg_line(fig, overall_rate)
-                st.plotly_chart(_theme(fig), width='stretch')
+                st.plotly_chart(_theme(fig, height=450), width='stretch')
                 
                 top_role = role_data.iloc[-1]
                 pp = top_role['Attrition Rate (%)'] - overall_rate
                 _insight(
                     f"<b>{top_role['Job Role']}</b> leads at <b>{top_role['Attrition Rate (%)']:.1f}%</b> — "
-                    f"{pp:+.1f}pp vs {overall_rate:.1f}% average. The spread is narrow (~2pp) — "
-                    f"this is <b>company-wide</b>, not role-specific."
+                    f"{pp:+.1f}pp vs {overall_rate:.1f}% average."
                 )
-                _cta(
-                    "<b>🎯 Action:</b> Don't target one department. Company-wide policy response "
-                    "(remote expansion, promotion pathways, overtime audit) will move the needle more."
-                )
+                _cta("<b>🎯 Action:</b> Company-wide policy response, not role-specific fixes.")
         
         with c2:
             stayed = int((dff["attrition"] == 0).sum())
@@ -678,18 +577,16 @@ def page_overview():
                 hole=0.62,
                 marker_colors=[KB_LIGHT, KB],
                 textinfo="percent+label",
-                hovertemplate="%{label}: %{value:,}<br>%{percent}<extra></extra>",
             ))
             fig.update_layout(
                 title="Workforce Split",
-                height=350,
                 annotations=[dict(
                     text=f"<b>{_safe_pct(left, total):.1f}%</b><br>Left",
                     x=0.5, y=0.5, font_size=14, font_color=KB, showarrow=False,
                 )],
             )
-            st.plotly_chart(_theme(fig), width='stretch')
-            _insight(f"<b>{left:,}</b> left · <b>{stayed:,}</b> retained · Retention: <b>{_safe_pct(stayed, total):.1f}%</b>")
+            st.plotly_chart(_theme(fig, height=450), width='stretch')
+            _insight(f"<b>{left:,}</b> left · <b>{stayed:,}</b> retained")
     
     # ────────────────────────────────────────────────────────────────────────
     # Q2: OVERTIME
@@ -704,41 +601,37 @@ def page_overview():
             .rename(columns={"attrition": "Attrition Rate (%)", "overtime": "Overtime"})
         )
         
-        c1, c2 = st.columns([2, 3])
+        c1, c2 = st.columns([1.5, 1])
+        
         with c1:
             fig = px.bar(
                 ot, 
                 x="Overtime", 
                 y="Attrition Rate (%)",
                 title="Overtime vs Attrition", 
-                color="Overtime",
-                color_discrete_map={"Yes": KB, "No": KB_LIGHT},
                 text="Attrition Rate (%)",
             )
             fig.update_traces(
                 texttemplate="%{y:.1f}%", 
                 textposition="outside",
-                marker=dict(line=dict(width=1, color="white"))
+                marker_color=KB,
+                marker_line=dict(width=0)
             )
             fig.update_layout(
                 xaxis_title="Works Overtime", 
                 yaxis_title="Attrition Rate (%)", 
-                showlegend=False,
-                height=350
+                showlegend=False
             )
             _add_avg_line(fig, overall_rate)
-            st.plotly_chart(_theme(fig), width='stretch')
+            st.plotly_chart(_theme(fig, height=450), width='stretch')
         
         with c2:
             ot_yes = _safe_first(ot[ot["Overtime"]=="Yes"]["Attrition Rate (%)"])
             ot_no = _safe_first(ot[ot["Overtime"]=="No"]["Attrition Rate (%)"])
             gap = ot_yes - ot_no
-            st.markdown("<br>", unsafe_allow_html=True)
-            _insight(
-                f"Overtime workers: <b>{ot_yes:.1f}%</b> vs No overtime: <b>{ot_no:.1f}%</b> — "
-                f"<b>{gap:.1f}pp gap</b> (~{int(74500*gap/100):,} additional departures)"
-            )
-            _cta("<b>🎯 Action:</b> Overtime audit by department. Target 20% reduction in 2 quarters.")
+            st.markdown("<br><br>", unsafe_allow_html=True)
+            _insight(f"<b>{ot_yes:.1f}%</b> vs <b>{ot_no:.1f}%</b> — <b>{gap:.1f}pp gap</b>")
+            _cta("<b>🎯 Action:</b> Overtime audit. 20% reduction in 2Q.")
     
     # ────────────────────────────────────────────────────────────────────────
     # Q3: REMOTE WORK
@@ -754,41 +647,37 @@ def page_overview():
         )
         remote["Location"] = remote["Location"].map({"Yes": "Remote", "No": "On-site"})
         
-        c1, c2 = st.columns([2, 3])
+        c1, c2 = st.columns([1.5, 1])
+        
         with c1:
             fig = px.bar(
                 remote, 
                 x="Location", 
                 y="Attrition Rate (%)",
                 title="Remote vs On-site", 
-                color="Location",
-                color_discrete_map={"Remote": KB, "On-site": KB_LIGHT},
                 text="Attrition Rate (%)",
             )
             fig.update_traces(
                 texttemplate="%{y:.1f}%", 
                 textposition="outside",
-                marker=dict(line=dict(width=1, color="white"))
+                marker_color=KB,
+                marker_line=dict(width=0)
             )
             fig.update_layout(
                 xaxis_title="", 
                 yaxis_title="Attrition Rate (%)", 
-                showlegend=False,
-                height=350
+                showlegend=False
             )
             _add_avg_line(fig, overall_rate)
-            st.plotly_chart(_theme(fig), width='stretch')
+            st.plotly_chart(_theme(fig, height=450), width='stretch')
         
         with c2:
             r_remote = _safe_first(remote[remote["Location"]=="Remote"]["Attrition Rate (%)"])
             r_onsite = _safe_first(remote[remote["Location"]=="On-site"]["Attrition Rate (%)"])
             gap = r_onsite - r_remote
-            st.markdown("<br>", unsafe_allow_html=True)
-            _insight(
-                f"Remote: <b>{r_remote:.1f}%</b> vs On-site: <b>{r_onsite:.1f}%</b> — "
-                f"<b>{gap:.1f}pp gap</b> (2nd largest effect). Selection bias possible."
-            )
-            _cta("<b>🎯 Action:</b> 90-day remote pilot for high-attrition on-site roles.")
+            st.markdown("<br><br>", unsafe_allow_html=True)
+            _insight(f"<b>{r_remote:.1f}%</b> vs <b>{r_onsite:.1f}%</b> — <b>{gap:.1f}pp gap</b>")
+            _cta("<b>🎯 Action:</b> 90-day pilot for on-site roles.")
     
     # ────────────────────────────────────────────────────────────────────────
     # Q4: PAY FAIRNESS
@@ -803,7 +692,7 @@ def page_overview():
             .rename(columns={"attrition": "Attrition Rate (%)", "job_level": "Job Level"})
         )
         
-        c1, c2 = st.columns(2)
+        c1, c2 = st.columns([1.5, 1])
         
         with c1:
             fig = px.bar(
@@ -811,25 +700,23 @@ def page_overview():
                 x="Job Level", 
                 y="Attrition Rate (%)",
                 title="Attrition by Job Level",
-                color="Attrition Rate (%)", 
-                color_continuous_scale=BLUE_SEQ,
                 text="Attrition Rate (%)",
             )
             fig.update_traces(
                 texttemplate="%{y:.1f}%", 
                 textposition="outside",
-                marker=dict(line=dict(width=0.5, color="rgba(26,90,255,0.3)"))
+                marker_color=KB,
+                marker_line=dict(width=0)
             )
-            fig.update_coloraxes(showscale=False)
-            fig.update_layout(xaxis_title="", yaxis_title="Attrition Rate (%)", height=350)
+            fig.update_layout(xaxis_title="", yaxis_title="Attrition Rate (%)", showlegend=False)
             _add_avg_line(fig, overall_rate)
-            st.plotly_chart(_theme(fig), width='stretch')
+            st.plotly_chart(_theme(fig, height=450), width='stretch')
             
             entry = _safe_first(jl[jl["Job Level"]=="Entry"]["Attrition Rate (%)"])
             senior = _safe_first(jl[jl["Job Level"]=="Senior"]["Attrition Rate (%)"])
             _insight(
                 f"Entry: <b>{entry:.1f}%</b>, Senior: <b>{senior:.1f}%</b> — "
-                f"<b>{entry-senior:.0f}pp gap</b>. <b>Job Level is the strongest driver (43pp effect).</b>"
+                f"<b>{entry-senior:.0f}pp gap.</b> Job Level is strongest driver."
             )
         
         with c2:
@@ -842,14 +729,12 @@ def page_overview():
                     color="job_level", 
                     barmode="group",
                     title="Pay Quartile Within Level",
-                    color_discrete_sequence=[KB_LIGHT, "#7FA8FF", KB],
                 )
-                fig.update_layout(xaxis_title="Pay Quartile", legend_title="Level", height=350)
+                fig.update_layout(xaxis_title="", legend_title="Level", showlegend=False)
                 _add_avg_line(fig, overall_rate)
-                st.plotly_chart(_theme(fig), width='stretch')
+                st.plotly_chart(_theme(fig, height=450), width='stretch')
         
-        _insight("Within-level pay increases only reduce attrition ~2pp. <b>The level itself matters most.</b>")
-        _cta("<b>🎯 Action:</b> Invest in promotion pathways to Mid-level, not salary increases.")
+        _cta("<b>🎯 Action:</b> Invest in promotion pathways, not salary hikes.")
     
     # ────────────────────────────────────────────────────────────────────────
     # Q5: RETENTION TIMELINE
@@ -865,27 +750,21 @@ def page_overview():
                 x="tenure_band", 
                 y="Attrition Rate (%)",
                 title="Attrition by Tenure",
-                color="Attrition Rate (%)", 
-                color_continuous_scale=BLUE_SEQ,
                 text="Attrition Rate (%)",
             )
             fig.update_traces(
                 texttemplate="%{y:.1f}%", 
                 textposition="outside",
-                marker=dict(line=dict(width=0.5, color="rgba(26,90,255,0.3)"))
+                marker_color=KB,
+                marker_line=dict(width=0)
             )
-            fig.update_coloraxes(showscale=False)
-            fig.update_layout(xaxis_title="Years at Company", yaxis_title="Attrition Rate (%)", height=350)
+            fig.update_layout(xaxis_title="Years at Company", yaxis_title="Attrition Rate (%)", showlegend=False)
             _add_avg_line(fig, overall_rate)
-            st.plotly_chart(_theme(fig), width='stretch')
+            st.plotly_chart(_theme(fig, height=500), width='stretch')
             
             peak = tenure_data.loc[tenure_data["Attrition Rate (%)"].idxmax()]
-            low = tenure_data.loc[tenure_data["Attrition Rate (%)"].idxmin()]
-            _insight(
-                f"Peak at <b>{peak['tenure_band']}</b> (<b>{peak['Attrition Rate (%)']:.1f}%</b>), "
-                f"drops to <b>{low['Attrition Rate (%)']:.1f}%</b> at 20+ years. No honeymoon cliff."
-            )
-            _cta("<b>🎯 Action:</b> Target 0–5 year employees with enhanced onboarding & mentoring.")
+            _insight(f"Peak at <b>{peak['tenure_band']}</b> (<b>{peak['Attrition Rate (%)']:.1f}%</b>)")
+            _cta("<b>🎯 Action:</b> Target 0–5yr with enhanced onboarding.")
     
     # ────────────────────────────────────────────────────────────────────────
     # Q6: ENGAGEMENT WARNING SIGNS
@@ -923,16 +802,11 @@ def page_overview():
                 title="WLB × Satisfaction",
                 xaxis_title="Job Satisfaction",
                 yaxis_title="Work-Life Balance",
-                height=400,
             )
-            st.plotly_chart(_theme(fig), width='stretch')
+            st.plotly_chart(_theme(fig, height=500), width='stretch')
             
-            _insight(
-                "Danger zone: <b>Poor WLB + Low Satisfaction = 67%</b> attrition. "
-                "Even <b>Very High satisfaction</b> doesn't protect Poor WLB (64.9%). "
-                "<b>WLB is dominant.</b>"
-            )
-            _cta("<b>🎯 Action:</b> Flag Poor/Fair WLB in quarterly pulse checks.")
+            _insight("Danger: <b>Poor WLB + Low Satisfaction = 67%</b> attrition. WLB is dominant.")
+            _cta("<b>🎯 Action:</b> Flag Poor/Fair WLB in pulse checks.")
     
     # ────────────────────────────────────────────────────────────────────────
     # Q7: LIFE STAGE
@@ -951,14 +825,16 @@ def page_overview():
                     x="Age Group", 
                     y="Attrition Rate (%)",
                     title="By Age",
-                    color="Attrition Rate (%)",
-                    color_continuous_scale=BLUE_SEQ,
                     text="Attrition Rate (%)",
                 )
-                fig.update_traces(texttemplate="%{y:.1f}%", textposition="outside")
-                fig.update_coloraxes(showscale=False)
+                fig.update_traces(
+                    texttemplate="%{y:.1f}%", 
+                    marker_color=KB,
+                    marker_line=dict(width=0)
+                )
+                fig.update_layout(showlegend=False)
                 _add_avg_line(fig, overall_rate)
-                st.plotly_chart(_theme(fig), width='stretch')
+                st.plotly_chart(_theme(fig, height=400), width='stretch')
         
         with c2:
             marital_data = q.get("attrition_by_marital", pd.DataFrame())
@@ -968,14 +844,16 @@ def page_overview():
                     x="Marital Status", 
                     y="Attrition Rate (%)",
                     title="By Marital Status",
-                    color="Marital Status",
-                    color_discrete_sequence=[KB, "#7FA8FF", KB_LIGHT],
                     text="Attrition Rate (%)",
                 )
-                fig.update_traces(texttemplate="%{y:.1f}%", textposition="outside")
+                fig.update_traces(
+                    texttemplate="%{y:.1f}%", 
+                    marker_color=KB,
+                    marker_line=dict(width=0)
+                )
                 fig.update_layout(showlegend=False)
                 _add_avg_line(fig, overall_rate)
-                st.plotly_chart(_theme(fig), width='stretch')
+                st.plotly_chart(_theme(fig, height=400), width='stretch')
         
         with c3:
             dep_data = q.get("attrition_by_dependents", pd.DataFrame())
@@ -990,10 +868,10 @@ def page_overview():
                 )
                 fig.update_traces(line_color=KB, marker_color=KB, marker_size=8)
                 _add_avg_line(fig, overall_rate)
-                st.plotly_chart(_theme(fig), width='stretch')
+                st.plotly_chart(_theme(fig, height=400), width='stretch')
         
-        _insight("Highest-risk: young, single. With dependents = stable. <b>Family = rootedness.</b>")
-        _cta("<b>🎯 Action:</b> Build community programs for young, single employees.")
+        _insight("Highest-risk: young, single. With dependents = stable.")
+        _cta("<b>🎯 Action:</b> Community programs for young employees.")
     
     # ────────────────────────────────────────────────────────────────────────
     # Q8: CAREER STAGNATION
@@ -1002,7 +880,7 @@ def page_overview():
         _qbadge("Q8 · Career Stagnation")
         _section("Does Feeling Stuck Drive Attrition?")
         
-        c1, c2 = st.columns(2)
+        c1, c2 = st.columns([1.5, 1])
         
         with c1:
             promo_data = q.get("attrition_by_promotions", pd.DataFrame())
@@ -1015,43 +893,38 @@ def page_overview():
                     markers=True, 
                     line_shape="spline",
                 )
-                fig.update_traces(line_color=KB, marker_color=KB, marker_size=9)
+                fig.update_traces(line_color=KB, marker_color=KB, marker_size=10)
                 _add_avg_line(fig, overall_rate)
-                st.plotly_chart(_theme(fig), width='stretch')
+                st.plotly_chart(_theme(fig, height=450), width='stretch')
                 
                 p0 = _safe_first(promo_data[promo_data["Number of Promotions"]==0]["Attrition Rate (%)"])
                 p4 = _safe_first(promo_data[promo_data["Number of Promotions"]==4]["Attrition Rate (%)"])
-                _insight(
-                    f"0 promos: <b>{p0:.1f}%</b> → 4 promos: <b>{p4:.1f}%</b>. "
-                    f"<b>Non-linear jump at 3 promotions.</b>"
-                )
+                _insight(f"0 promos: <b>{p0:.1f}%</b> → 4 promos: <b>{p4:.1f}%</b>. Non-linear jump at 3rd.")
         
         with c2:
-            for col_key, label in [
-                ("attrition_by_leadership_opportunities", "Leadership"),
-                ("attrition_by_innovation_opportunities", "Innovation"),
-            ]:
-                opp_data = q.get(col_key, pd.DataFrame())
-                if not opp_data.empty and len(opp_data.columns) >= 2:
-                    x_col = opp_data.columns[0]
-                    fig = px.bar(
-                        opp_data, 
-                        x=x_col, 
-                        y="Attrition Rate (%)",
-                        title=f"{label} Opportunities",
-                        color=x_col, 
-                        color_discrete_map={"Yes": KB, "No": KB_LIGHT},
-                        text="Attrition Rate (%)",
-                    )
-                    fig.update_traces(texttemplate="%{y:.1f}%", textposition="outside")
-                    fig.update_layout(xaxis_title="", showlegend=False, height=350)
-                    _add_avg_line(fig, overall_rate)
-                    st.plotly_chart(_theme(fig), width='stretch')
+            opp_data = q.get("attrition_by_leadership_opportunities", pd.DataFrame())
+            if not opp_data.empty and len(opp_data.columns) >= 2:
+                x_col = opp_data.columns[0]
+                fig = px.bar(
+                    opp_data, 
+                    x=x_col, 
+                    y="Attrition Rate (%)",
+                    title="Leadership Opportunities",
+                    text="Attrition Rate (%)",
+                )
+                fig.update_traces(
+                    texttemplate="%{y:.1f}%",
+                    marker_color=KB,
+                    marker_line=dict(width=0)
+                )
+                fig.update_layout(xaxis_title="", showlegend=False)
+                _add_avg_line(fig, overall_rate)
+                st.plotly_chart(_theme(fig, height=450), width='stretch')
         
         stuck_n = q.get("stuck_n", 0)
         stuck_rate = q.get("stuck_rate", 0.0)
-        _risk(f"<b>{stuck_n:,} employees</b> fully stuck (0 promos, no leadership, no innovation). <b>{stuck_rate:.1f}%</b> attrition.")
-        _cta(f"<b>🎯 Action:</b> 90-day development plans. Move 30% out within 2 quarters.")
+        _risk(f"<b>{stuck_n:,}</b> fully stuck: 0 promos + no leadership + no innovation = <b>{stuck_rate:.1f}%</b> attrition.")
+        _cta(f"<b>🎯 Action:</b> 90-day dev plans for {stuck_n:,} employees.")
     
     # ────────────────────────────────────────────────────────────────────────
     # Q9: HIGHEST-RISK PROFILE
@@ -1064,12 +937,10 @@ def page_overview():
         risk_rate = q.get("risk_profile_rate", 0.0)
         risk_lift = risk_rate - overall_rate
         
-        _risk(
-            f"<b>Profile:</b> Poor WLB + Overtime + 0 Promos + No Leadership<br>"
-            f"<b>Attrition: {risk_rate:.1f}%</b> ({risk_lift:+.1f}pp) · <b>{risk_n:,} employees</b>"
-        )
+        _risk(f"<b>Profile:</b> Poor WLB + Overtime + 0 Promos + No Leadership<br>"
+              f"<b>{risk_rate:.1f}%</b> attrition ({risk_lift:+.1f}pp) · <b>{risk_n:,} employees</b>")
         
-        c1, c2 = st.columns(2)
+        c1, c2 = st.columns([1.5, 1])
         
         with c1:
             factors = pd.DataFrame({
@@ -1082,18 +953,20 @@ def page_overview():
                 y="Factor", 
                 orientation="h",
                 title="Risk Factors",
-                color="Attrition Rate (%)", 
-                color_continuous_scale=BLUE_SEQ,
                 text="Attrition Rate (%)",
             )
-            fig.update_traces(texttemplate="%{x:.1f}%", textposition="outside")
-            fig.update_coloraxes(showscale=False)
+            fig.update_traces(
+                texttemplate="%{x:.1f}%", 
+                marker_color=KB,
+                marker_line=dict(width=0)
+            )
+            fig.update_layout(showlegend=False)
             _add_avg_line(fig, overall_rate)
-            st.plotly_chart(_theme(fig), width='stretch')
+            st.plotly_chart(_theme(fig, height=450), width='stretch')
         
         with c2:
             comparison = pd.DataFrame({
-                "Group": ["Company Avg", "Risk Profile"],
+                "Group": ["Avg", "Risk"],
                 "Attrition Rate (%)": [overall_rate, risk_rate],
             })
             fig = px.bar(
@@ -1101,15 +974,17 @@ def page_overview():
                 x="Group", 
                 y="Attrition Rate (%)",
                 title="Risk vs Average",
-                color="Group", 
-                color_discrete_map={"Company Avg": KB_LIGHT, "Risk Profile": KB},
                 text="Attrition Rate (%)",
             )
-            fig.update_traces(texttemplate="%{y:.1f}%", textposition="outside")
+            fig.update_traces(
+                texttemplate="%{y:.1f}%",
+                marker_color=KB,
+                marker_line=dict(width=0)
+            )
             fig.update_layout(showlegend=False)
-            st.plotly_chart(_theme(fig), width='stretch')
+            st.plotly_chart(_theme(fig, height=450), width='stretch')
         
-        _cta(f"<b>🎯 Action:</b> HR touchpoint for {risk_n:,} within 30 days. Eliminate 2+ factors.")
+        _cta(f"<b>🎯 Action:</b> HR touchpoint for {risk_n:,} within 30 days.")
     
     # ────────────────────────────────────────────────────────────────────────
     # Q10: WHAT MOVES THE NEEDLE
@@ -1126,109 +1001,68 @@ def page_overview():
                 y="Driver", 
                 orientation="h",
                 title="Top Drivers by Effect Size",
-                color="Effect (pp)", 
-                color_continuous_scale=BLUE_SEQ,
                 text="Effect (pp)",
             )
-            fig.update_traces(texttemplate="%{x:.1f}pp", textposition="outside")
-            fig.update_coloraxes(showscale=False)
-            fig.update_layout(xaxis_title="Attrition Difference (pp)", yaxis_title="", height=350)
-            st.plotly_chart(_theme(fig), width='stretch')
+            fig.update_traces(
+                texttemplate="%{x:.1f}pp",
+                marker_color=KB,
+                marker_line=dict(width=0)
+            )
+            fig.update_layout(showlegend=False)
+            st.plotly_chart(_theme(fig, height=450), width='stretch')
         
         st.markdown("### 🏆 Top 3 Recommendations")
         r1, r2, r3 = st.columns(3)
         
         with r1:
             st.markdown(
-                "<div class='risk-card'><b>#1 · Remote Work</b><br>"
-                "Effect: <b>28.1pp</b><br>"
-                "2-week policy change. 19% remote now."
-                "</div>",
+                "<div class='rec-box'><b>#1 Remote Work</b><br>28.1pp effect<br>2-week policy</div>",
                 unsafe_allow_html=True,
             )
         
         with r2:
             st.markdown(
-                "<div class='rec-box'><b>#2 · Promotions</b><br>"
-                "Effect: <b>26.0pp</b><br>"
-                "Non-linear jump at 3rd."
-                "</div>",
+                "<div class='rec-box'><b>#2 Promotions</b><br>26.0pp effect<br>Non-linear jump</div>",
                 unsafe_allow_html=True,
             )
         
         with r3:
             st.markdown(
-                "<div class='rec-box'><b>#3 · Work-Life Balance</b><br>"
-                "Effect: <b>24.5pp</b><br>"
-                "Overrides satisfaction."
-                "</div>",
+                "<div class='rec-box'><b>#3 Work-Life Balance</b><br>24.5pp effect<br>Overrides satisfaction</div>",
                 unsafe_allow_html=True,
             )
-        
-        st.markdown("---")
-        st.markdown("### 📋 90-Day Action Plan")
-        st.info(
-            "**Week 1–2:** Launch remote eligibility review\n\n"
-            f"**Week 1–3:** Assign HR partners to {risk_n:,} risk-profile employees\n\n"
-            "**Week 2–4:** Overtime audit by department\n\n"
-            "**Month 2:** Accelerate promotion reviews (0-promotion cohort)\n\n"
-            "**Month 2:** WLB pulse survey\n\n"
-            "**Month 3:** Launch peer-community programme"
-        )
 
 # ═════════════════════════════════════════════════════════════════════════════
-# PAGE 2: WORKLOAD (Q2, Q3)
+# OTHER PAGES
 # ═════════════════════════════════════════════════════════════════════════════
 def page_workload():
     st.markdown("## ⏰ Workload & Flexibility")
     _kpi_row()
-    st.markdown("---")
-    
-    st.info("See Q2 & Q3 in the Overview tabs above for detailed analysis.")
+    st.info("📊 See Q2 & Q3 in Overview for detailed analysis")
 
-# ═════════════════════════════════════════════════════════════════════════════
-# PAGE 3: PAY (Q4)
-# ═════════════════════════════════════════════════════════════════════════════
 def page_pay():
     st.markdown("## 💰 Pay & Job Level")
     _kpi_row()
-    st.markdown("---")
-    
-    st.info("See Q4 in the Overview tabs above for detailed analysis.")
+    st.info("📊 See Q4 in Overview for detailed analysis")
 
-# ═════════════════════════════════════════════════════════════════════════════
-# PAGE 4: ENGAGEMENT (Q5, Q6, Q7)
-# ═════════════════════════════════════════════════════════════════════════════
 def page_engagement():
     st.markdown("## 🧠 Engagement & Life Stage")
     _kpi_row()
-    st.markdown("---")
-    
-    st.info("See Q5, Q6 & Q7 in the Overview tabs above for detailed analysis.")
+    st.info("📊 See Q5, Q6 & Q7 in Overview for detailed analysis")
 
-# ═════════════════════════════════════════════════════════════════════════════
-# PAGE 5: CAREER (Q8)
-# ═════════════════════════════════════════════════════════════════════════════
 def page_career():
     st.markdown("## 🚀 Career Growth")
     _kpi_row()
-    st.markdown("---")
-    
-    st.info("See Q8 in the Overview tabs above for detailed analysis.")
+    st.info("📊 See Q8 in Overview for detailed analysis")
 
-# ═════════════════════════════════════════════════════════════════════════════
-# PAGE 6: RISK & STRATEGY (Q9, Q10)
-# ═════════════════════════════════════════════════════════════════════════════
 def page_risk():
     st.markdown("## 🎯 Risk & Strategy")
     _kpi_row()
-    st.markdown("---")
-    
-    st.info("See Q9 & Q10 in the Overview tabs above for detailed analysis.")
+    st.info("📊 See Q9 & Q10 in Overview for detailed analysis")
 
-# ═════════════════════════════════════════════════════════════════════════════
+# ─────────────────────────────────────────────────────────────────────────────
 # NAVIGATION
-# ═════════════════════════════════════════════════════════════════════════════
+# ─────────────────────────────────────────────────────────────────────────────
 pg = st.navigation({
     "📊 Dashboard": [
         st.Page(page_overview, title="Overview", icon="🏠", default=True),
