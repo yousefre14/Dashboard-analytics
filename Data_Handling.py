@@ -76,9 +76,9 @@ def load_and_clean(train: str, test: str) -> pd.DataFrame:
     # CSV stores "Stayed"/"Left" strings. Without this, .mean() returns NaN
     # and every KPI, chart, and filter silently breaks.
     if df["attrition"].dtype == object:
-    df["attrition"] = df["attrition"].map({"Stayed": 0, "Left": 1})
-
-# Check for any unmapped values (NaN)
+        df["attrition"] = df["attrition"].map({"Stayed": 0, "Left": 1})
+    
+    # Check for any unmapped values (NaN)
     if df["attrition"].isna().any():
         print(f"Warning: {df['attrition'].isna().sum()} NaN values after mapping")
         print("Unique values:", df["attrition"].unique())
