@@ -425,10 +425,12 @@ def load_and_clean(train: str, test: str) -> pd.DataFrame:
     return df
 
 
-# ─────────────────────────────────────────────────────────────────────────────
 # PRE-COMPUTED AGGREGATIONS  (runs ONCE at load via @st.cache_data)
-# All O(n) groupby → mean/agg single passes. No loops, no intermediate copies.
-# ─────────────────────────────────────────────────────────────────────────────
+                                                                                                                                                         
+
+
+
+
 def compute_aggregration(df: pd.DataFrame) -> Dict:
     """
     Computes general aggregations used across multiple dashboard pages.
