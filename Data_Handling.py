@@ -1,7 +1,4 @@
 """
-Data_Handling.py  —  HR Attrition Analytics
-Kayfa AI & Data Analytics Internship · Week 1
-
 All data loading, cleaning, validation, and pre-computation lives here.
 main.py imports and calls — no raw pandas in the UI layer.
 
@@ -10,8 +7,6 @@ Architecture:
   - Heavy aggregations run ONCE at load via @st.cache_data
   - Built-in validation & testing utilities
   - Comprehensive error handling with detailed feedback
-
-Complexity contract: every operation is O(n), never O(n²).
 """
 
 import pandas as pd
@@ -19,9 +14,7 @@ import numpy as np
 import logging
 from typing import Dict, Tuple, Optional
 
-# ─────────────────────────────────────────────────────────────────────────────
-# LOGGING CONFIGURATION  —  Production-grade debugging
-# ─────────────────────────────────────────────────────────────────────────────
+# LOGGING CONFIGURATION 
 logging.basicConfig(
     level=logging.INFO,
     format='[%(levelname)s] %(asctime)s · %(name)s · %(message)s',
@@ -30,10 +23,8 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-# ─────────────────────────────────────────────────────────────────────────────
 # ORDINAL MAPS  —  Verified against REAL CSV values, not task descriptions
 # Explicit ordering ensures categorical operations respect hierarchy (not alphabetical)
-# ─────────────────────────────────────────────────────────────────────────────
 ORDINAL_MAPS = {
     "work_life_balance":    ["Poor", "Fair", "Good", "Excellent"],
     "job_satisfaction":     ["Low", "Medium", "High", "Very High"],
@@ -67,9 +58,7 @@ CATEGORICAL_VALUES = {
 }
 
 
-# ─────────────────────────────────────────────────────────────────────────────
 # VALIDATION UTILITIES  —  Test data integrity at every stage
-# ─────────────────────────────────────────────────────────────────────────────
 class DataValidationError(Exception):
     """Custom exception for data validation failures."""
     pass
