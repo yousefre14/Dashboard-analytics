@@ -524,7 +524,7 @@ def page_overview():
                 xaxis=dict(range=[0, max(role_data["Attrition Rate (%)"].max() + 10, 60)])
             )
             _add_avg_line(fig, overall_rate)
-            st.plotly_chart(_theme(fig, height=400), width='stretch')
+            st.plotly_chart(_theme(fig), use_container_width=True)
             
             top_role = role_data.iloc[-1]
             pp = top_role['Attrition Rate (%)'] - overall_rate
@@ -562,7 +562,7 @@ def page_overview():
                 x=0.5, y=0.5, font=dict(size=16, color=KB), showarrow=False,
             )],
         )
-        st.plotly_chart(_theme(fig, height=450), width='stretch')
+        st.plotly_chart(_theme(fig), use_container_width=True)
         _insight(f"<b>{left:,}</b> left · <b>{stayed:,}</b> retained")
     
     # Q2: OVERTIME
