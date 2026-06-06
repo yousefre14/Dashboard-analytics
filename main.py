@@ -522,18 +522,15 @@ def page_overview():
             margin=dict(l=100, r=50, t=60, b=60),
             xaxis=dict(range=[0, role_data["Attrition Rate (%)"].max() + 10]),
         )
-        _add_avg_line(fig, overall_rate, orientation="h")
-        st.plotly_chart(_theme(fig), use_container_width=True)
+       _add_avg_line(fig, overall_rate, is_horizontal=True)
+            st.plotly_chart(_theme(fig, height=450), width='stretch')
             
-        top_role = role_data.iloc[-1]
-        pp = top_role['Attrition Rate (%)'] - overall_rate
-        _insight(
-            f"<b>{top_role['Job Role']}</b> leads at <b>{top_role['Attrition Rate (%)']:.1f}%</b> — "
-            f"{pp:+.1f}pp vs {overall_rate:.1f}% average."
-        )
-        _cta("<b>🎯 Action:</b> Company-wide policy response, not role-specific fixes.")
-    
-    st.markdown("---")
+            top_role = role_data.iloc[-1]
+            pp = top_role['Attrition Rate (%)'] - overall_rate
+            _insight(f"<b>{top_role['Job Role']}</b> leads at <b>{top_role['Attrition Rate (%)']:.1f}%</b> — {pp:+.1f}pp vs {overall_rate:.1f}% average.")
+            _cta("<b>🎯 Action:</b> Company-wide policy response, not role-specific fixes.")
+        
+        st.markdown("---")
         
         # CHART 2: Workforce Split (PIE)
     stayed = int((dff["attrition"] == 0).sum())
