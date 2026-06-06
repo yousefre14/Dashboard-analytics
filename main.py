@@ -491,39 +491,39 @@ def page_overview():
         _qbadge("The Headline")
         _section("Who Is Leaving — and Where to Look First")
             
-            role_data = (
-                dff.groupby("job_role", observed=True)["attrition"]
-                .mean().mul(100).round(1).reset_index()
-                .rename(columns={"attrition": "Attrition Rate (%)", "job_role": "Job Role"})
-                .sort_values("Attrition Rate (%)", ascending=True)
-            )
-            
-            if len(role_data) > 0:
-                # CHART 1: Attrition by Role (FULL WIDTH, TALL)
-                fig = px.bar(
-                role_data,
-                x="Attrition Rate (%)",
-                y="Job Role",
-                orientation="h",
-                title="Attrition Rate by Job Role",
-                text="Attrition Rate (%)",
-            )
-            fig.update_traces(
-                texttemplate="%{x:.1f}%",
-                textposition="outside",
-                marker_color=KB,
-                marker_line=dict(width=0),
-            )
-            fig.update_layout(
-                yaxis_title="",
-                xaxis_title="Attrition Rate (%)",
-                showlegend=False,
-                height=400,
-                margin=dict(l=100, r=50, t=60, b=60),
-                xaxis=dict(range=[0, role_data["Attrition Rate (%)"].max() + 10]),
-            )
-            _add_avg_line(fig, overall_rate, orientation="h")
-            st.plotly_chart(_theme(fig), use_container_width=True)
+        role_data = (
+            dff.groupby("job_role", observed=True)["attrition"]
+            .mean().mul(100).round(1).reset_index()
+            .rename(columns={"attrition": "Attrition Rate (%)", "job_role": "Job Role"})
+            .sort_values("Attrition Rate (%)", ascending=True)
+        )
+        
+        if len(role_data) > 0:
+            # CHART 1: Attrition by Role (FULL WIDTH, TALL)
+            fig = px.bar(
+            role_data,
+            x="Attrition Rate (%)",
+            y="Job Role",
+            orientation="h",
+            title="Attrition Rate by Job Role",
+            text="Attrition Rate (%)",
+        )
+        fig.update_traces(
+            texttemplate="%{x:.1f}%",
+            textposition="outside",
+            marker_color=KB,
+            marker_line=dict(width=0),
+        )
+        fig.update_layout(
+            yaxis_title="",
+            xaxis_title="Attrition Rate (%)",
+            showlegend=False,
+            height=400,
+            margin=dict(l=100, r=50, t=60, b=60),
+            xaxis=dict(range=[0, role_data["Attrition Rate (%)"].max() + 10]),
+        )
+        _add_avg_line(fig, overall_rate, orientation="h")
+        st.plotly_chart(_theme(fig), use_container_width=True)
             
             top_role = role_data.iloc[-1]
             pp = top_role['Attrition Rate (%)'] - overall_rate
