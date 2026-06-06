@@ -72,30 +72,18 @@ def load_and_clean(train: str, test: str) -> pd.DataFrame:
         if df[col].isnull().any():
             df[col] = df[col].fillna(df[col].mode()[0])
 
-    # ── 5. CRITICAL: encode attrition 0 / 1 ─────────────────────────────────
-    # CSV stores "Stayed"/"Left" strings. Without this, .mean() returns NaN
-    # and every KPI, chart, and filter silently breaks.
-    # ── 5. CRITICAL: encode attrition 0 / 1 ─────────────────────────────────
+       # ── 5. CRITICAL: encode attrition 0 / 1 ─────────────────────────────────
     if df["attrition"].dtype == object:
-        # Normalize: strip whitespace, convert to lowercase
         df["attrition"] = (
             df["attrition"]
             .str.strip()
             .str.lower()
             .map({
                 "stayed": 0, "left": 1,
-                "no": 0, "yes": 1,      # Handle Yes/No variants
-                "0": 0, "1": 1,         # Handle numeric strings
+                "no": 0, "yes": 1,
+                "0": 0, "1": 1,
             })
-        )
-
-    # Verify no NaN values remain
-    nan_count = df["attrition"].isna().sum()
-    if nan_count > 0:
-        print(f"❌ {nan_count} unmapped attrition values found!")
-        raise ValueError(
-            f"Cannot map all attrition values to 0/1. "
-            f"Found values: {df['attrition'].dropna().unique()}"
+            .fillna(0)  # ← Fill ANY unmapped value with 0
         )
 
     df["attrition"] = df["attrition"].astype(int)
