@@ -174,7 +174,7 @@ def load_logo():
         return Image.open("company_logo2.png")
     except FileNotFoundError:
         try:
-            url = "https://raw.githubusercontent.com/YOUR_USER/YOUR_REPO/main/company_logo2.png"
+            url = "https://raw.githubusercontent.com/yousefre14/Dashboared-analytics/main/company_logo2.png"
             resp = requests.get(url, timeout=5)
             resp.raise_for_status()
             return Image.open(BytesIO(resp.content))
@@ -182,6 +182,20 @@ def load_logo():
             return None
 
 logo = load_logo()
+
+def load_logo2():
+    try:
+        return Image.open("image.png")
+    except FileNotFoundError:
+        try:
+            url = "https://raw.githubusercontent.com/yousefre14/Dashboared-analytics/main/image.png"
+            resp = requests.get(url, timeout=5)
+            resp.raise_for_status()
+            return Image.open(BytesIO(resp.content))
+        except Exception:
+            return None
+logo2 = load_logo2()
+
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -266,9 +280,7 @@ def _safe_first(series: pd.Series, fallback: float = 0.0) -> float:
     return float(series.values[0]) if len(series) > 0 else fallback
 
 
-# ─────────────────────────────────────────────────────────────────────────────
 # DATA — cached, runs once per session
-# ─────────────────────────────────────────────────────────────────────────────
 @st.cache_data(show_spinner="🔄 Loading data…")
 def get_data():
     try:
@@ -287,13 +299,10 @@ df, aggs, q = get_data()
 overall_rate = aggs["overall_rate"] * 100
 
 
-# ─────────────────────────────────────────────────────────────────────────────
 # SIDEBAR — Logo + Filters (defined before pg.run() → persists on all pages)
-# ─────────────────────────────────────────────────────────────────────────────
 with st.sidebar:
-    # Logo — top of sidebar (rubric: logo in sidebar)
     if logo is not None:
-        st.image(logo, use_container_width=True)
+        st.image(logo2, use_container_width=True)
     else:
         st.markdown(
             "<div style='direction:rtl;text-align:center;font-size:2rem;"
@@ -302,7 +311,7 @@ with st.sidebar:
         )
 
     st.markdown("---")
-    st.markdown("### 🔍 Filters")
+    st.markdown("### Filters")
 
     all_roles   = sorted(df["job_role"].unique().tolist())
     all_genders = sorted(df["gender"].unique().tolist())
