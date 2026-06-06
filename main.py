@@ -1292,4 +1292,4 @@ def page_risk():
     roadmap = pd.DataFrame({
         "Priority": ["🔴", "🔴", "🟠", "🟠", "🟡", "🟡"],
         "Action": [
-            "Launch remote work
+            "Launch remote work]
