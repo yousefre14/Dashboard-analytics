@@ -509,11 +509,11 @@ def page_overview():
                 text="Attrition Rate (%)",
             )
             fig.update_traces(
-                texttemplate="%{x:.1f}%", 
+                texttemplate="%{x:.1f}%",
                 textposition="outside",
                 marker_color=KB,
                 marker_line=dict(width=0),
-                textfont=dict(size=12, color="#1245CC")
+            )
             )
             fig.update_layout(
                 yaxis_title="", 
@@ -523,7 +523,7 @@ def page_overview():
                 margin=dict(l=100, r=50, t=60, b=60),  # MORE LEFT MARGIN FOR LABELS
                 xaxis=dict(range=[0, max(role_data["Attrition Rate (%)"].max() + 10, 60)])
             )
-            _add_avg_line(fig, overall_rate)
+            _add_avg_line(fig, overall_rate, orientation="h")  
             st.plotly_chart(_theme(fig), use_container_width=True)
             
             top_role = role_data.iloc[-1]
