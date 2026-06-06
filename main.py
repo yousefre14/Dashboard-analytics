@@ -484,72 +484,86 @@ def page_overview():
     ])
     
     # Q1: THE HEADLINE
-    with tab1:
-        _qbadge("The Headline")
-        _section("Who Is Leaving — and Where to Look First")
+    # ────────────────────────────────────────────────────────────────────────
+# Q1: THE HEADLINE
+# ────────────────────────────────────────────────────────────────────────
+with tab1:
+    _qbadge("Q1 · The Headline")
+    _section("Who Is Leaving — and Where to Look First")
+    
+    role_data = (
+        dff.groupby("job_role", observed=True)["attrition"]
+        .mean().mul(100).round(1).reset_index()
+        .rename(columns={"attrition": "Attrition Rate (%)", "job_role": "Job Role"})
+        .sort_values("Attrition Rate (%)", ascending=True)
+    )
+    
+    if len(role_data) > 0:
+        # CHART 1: Attrition by Role (FULL WIDTH, TALL)
+        fig = px.bar(
+            role_data, 
+            x="Attrition Rate (%)", 
+            y="Job Role", 
+            orientation="h",
+            title="Attrition Rate by Job Role",
+            text="Attrition Rate (%)",
+        )
+        fig.update_traces(
+            texttemplate="%{x:.1f}%", 
+            textposition="outside",
+            marker_color=KB,
+            marker_line=dict(width=0),
+            textfont=dict(size=12, color="#1245CC")
+        )
+        fig.update_layout(
+            yaxis_title="", 
+            xaxis_title="Attrition Rate (%)",
+            showlegend=False,
+            height=400,  # TALLER
+            margin=dict(l=100, r=50, t=60, b=60),  # MORE LEFT MARGIN FOR LABELS
+            xaxis=dict(range=[0, max(role_data["Attrition Rate (%)"].max() + 10, 60)])
+        )
+        _add_avg_line(fig, overall_rate)
+        st.plotly_chart(_theme(fig, height=400), width='stretch')
         
-        c1, c2 = st.columns([1.5, 1])
-        
-        with c1:
-            role_data = (
-                dff.groupby("job_role", observed=True)["attrition"]
-                .mean().mul(100).round(1).reset_index()
-                .rename(columns={"attrition": "Attrition Rate (%)", "job_role": "Job Role"})
-                .sort_values("Attrition Rate (%)", ascending=True)
-            )
-            
-            if len(role_data) > 0:
-                fig = px.bar(
-                    role_data, 
-                    x="Attrition Rate (%)", 
-                    y="Job Role", 
-                    orientation="h",
-                    title="Attrition Rate by Job Role",
-                    text="Attrition Rate (%)",
-                )
-                fig.update_traces(
-                    texttemplate="%{x:.1f}%", 
-                    textposition="outside",
-                    marker_color=KB,
-                    marker_line=dict(width=0)
-                )
-                fig.update_layout(
-                    yaxis_title="", 
-                    xaxis_title="Attrition Rate (%)",
-                    showlegend=False
-                )
-                _add_avg_line(fig, overall_rate)
-                st.plotly_chart(_theme(fig, height=450), width='stretch')
-                
-                top_role = role_data.iloc[-1]
-                pp = top_role['Attrition Rate (%)'] - overall_rate
-                _insight(
-                    f"<b>{top_role['Job Role']}</b> leads at <b>{top_role['Attrition Rate (%)']:.1f}%</b> — "
-                    f"{pp:+.1f}pp vs {overall_rate:.1f}% average."
-                )
-                _cta("<b>🎯 Action:</b> Company-wide policy response, not role-specific fixes.")
-        
-        with c2:
-            stayed = int((dff["attrition"] == 0).sum())
-            left = int((dff["attrition"] == 1).sum())
-            total = stayed + left
-            
-            fig = go.Figure(go.Pie(
-                labels=["Stayed", "Left"], 
-                values=[stayed, left], 
-                hole=0.62,
-                marker_colors=[KB_LIGHT, KB],
-                textinfo="percent+label",
-            ))
-            fig.update_layout(
-                title="Workforce Split",
-                annotations=[dict(
-                    text=f"<b>{_safe_pct(left, total):.1f}%</b><br>Left",
-                    x=0.5, y=0.5, font_size=14, font_color=KB, showarrow=False,
-                )],
-            )
-            st.plotly_chart(_theme(fig, height=450), width='stretch')
-            _insight(f"<b>{left:,}</b> left · <b>{stayed:,}</b> retained")
+        top_role = role_data.iloc[-1]
+        pp = top_role['Attrition Rate (%)'] - overall_rate
+        _insight(
+            f"<b>{top_role['Job Role']}</b> leads at <b>{top_role['Attrition Rate (%)']:.1f}%</b> — "
+            f"{pp:+.1f}pp vs {overall_rate:.1f}% average."
+        )
+        _cta("<b>🎯 Action:</b> Company-wide policy response, not role-specific fixes.")
+    
+    st.markdown("---")
+    
+    # CHART 2: Workforce Split (PIE)
+    stayed = int((dff["attrition"] == 0).sum())
+    left = int((dff["attrition"] == 1).sum())
+    total = stayed + left
+    
+    fig = go.Figure(go.Pie(
+        labels=["Stayed", "Left"], 
+        values=[stayed, left], 
+        hole=0.62,
+        marker=dict(
+            colors=[KB_LIGHT, KB],
+            line=dict(color='white', width=2)
+        ),
+        textinfo="percent+label",
+        textposition="auto",
+        textfont=dict(size=13, color="white"),
+    ))
+    fig.update_layout(
+        title="Workforce Split",
+        height=450,
+        margin=dict(l=50, r=50, t=80, b=50),
+        annotations=[dict(
+            text=f"<b>{_safe_pct(left, total):.1f}%</b><br>Left",
+            x=0.5, y=0.5, font=dict(size=16, color=KB), showarrow=False,
+        )],
+    )
+    st.plotly_chart(_theme(fig, height=450), width='stretch')
+    _insight(f"<b>{left:,}</b> left · <b>{stayed:,}</b> retained")
     
     # Q2: OVERTIME
     with tab2:
