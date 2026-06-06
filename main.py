@@ -514,7 +514,6 @@ def page_overview():
                 marker_color=KB,
                 marker_line=dict(width=0),
             )
-            )
             fig.update_layout(
                 yaxis_title="", 
                 xaxis_title="Attrition Rate (%)",
