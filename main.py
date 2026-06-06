@@ -488,7 +488,7 @@ def page_overview():
 # Q1: THE HEADLINE
 # ────────────────────────────────────────────────────────────────────────
     with tab1:
-        _qbadge("Q1 · The Headline")
+        _qbadge("The Headline")
         _section("Who Is Leaving — and Where to Look First")
         
         role_data = (
@@ -519,7 +519,7 @@ def page_overview():
                 yaxis_title="", 
                 xaxis_title="Attrition Rate (%)",
                 showlegend=False,
-                height=400,  # TALLER
+                height=800,  # TALLER
                 margin=dict(l=100, r=50, t=60, b=60),  # MORE LEFT MARGIN FOR LABELS
                 xaxis=dict(range=[0, max(role_data["Attrition Rate (%)"].max() + 10, 60)])
             )
