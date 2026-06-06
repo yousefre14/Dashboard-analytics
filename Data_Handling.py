@@ -75,18 +75,29 @@ def load_and_clean(train: str, test: str) -> pd.DataFrame:
     # ── 5. CRITICAL: encode attrition 0 / 1 ─────────────────────────────────
     # CSV stores "Stayed"/"Left" strings. Without this, .mean() returns NaN
     # and every KPI, chart, and filter silently breaks.
+    # ── 5. CRITICAL: encode attrition 0 / 1 ─────────────────────────────────
     if df["attrition"].dtype == object:
-        df["attrition"] = df["attrition"].map({"Stayed": 0, "Left": 1})
-    
-    # Check for any unmapped values (NaN)
-    if df["attrition"].isna().any():
-        print(f"Warning: {df['attrition'].isna().sum()} NaN values after mapping")
-        print("Unique values:", df["attrition"].unique())
-        # Option 1: Drop rows with NaN
-        df = df.dropna(subset=["attrition"])
-        # Option 2: Fill with a default (e.g., 0)
-        # df["attrition"] = df["attrition"].fillna(0)
-    
+        # Normalize: strip whitespace, convert to lowercase
+        df["attrition"] = (
+            df["attrition"]
+            .str.strip()
+            .str.lower()
+            .map({
+                "stayed": 0, "left": 1,
+                "no": 0, "yes": 1,      # Handle Yes/No variants
+                "0": 0, "1": 1,         # Handle numeric strings
+            })
+        )
+
+    # Verify no NaN values remain
+    nan_count = df["attrition"].isna().sum()
+    if nan_count > 0:
+        print(f"❌ {nan_count} unmapped attrition values found!")
+        raise ValueError(
+            f"Cannot map all attrition values to 0/1. "
+            f"Found values: {df['attrition'].dropna().unique()}"
+        )
+
     df["attrition"] = df["attrition"].astype(int)
 
     # ── 6. Cast ordinals to ordered Categorical ──────────────────────────────
