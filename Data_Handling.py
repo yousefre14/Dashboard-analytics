@@ -72,22 +72,43 @@ def load_and_clean(train: str, test: str) -> pd.DataFrame:
         if df[col].isnull().any():
             df[col] = df[col].fillna(df[col].mode()[0])
 
-       # ── 5. CRITICAL: encode attrition 0 / 1 ─────────────────────────────────
-    if df["attrition"].dtype == object:
-        df["attrition"] = (
-            df["attrition"]
-            .str.strip()
-            .str.lower()
-            .map({
-                "stayed": 0, "left": 1,
-                "no": 0, "yes": 1,
-                "0": 0, "1": 1,
-            })
-            .fillna(0)  # ← Fill ANY unmapped value with 0
-        )
-
-    df["attrition"] = df["attrition"].astype(int)
-
+    # ── 5. CRITICAL: encode attrition 0 / 1 ─────────────────────────────────
+    # CSV stores "Stayed"/"Left" strings. Convert to 0/1 binary.
+    
+    print(f"[DEBUG] Column 'attrition' dtype BEFORE: {df['attrition'].dtype}")
+    print(f"[DEBUG] Sample values: {df['attrition'].head(10).tolist()}")
+    
+    # Step 1: If it's already numeric (0/1 or 1/0), just ensure it's int
+    if df["attrition"].dtype in ['int64', 'int32', 'float64']:
+        df["attrition"] = df["attrition"].fillna(0).astype(int)
+    
+    # Step 2: If it's object (string), map it
+    elif df["attrition"].dtype == 'object':
+        # Normalize whitespace and case
+        df["attrition"] = df["attrition"].str.strip().str.lower()
+        
+        # Create mapping
+        mapping = {
+            "stayed": 0, "left": 1,
+            "no": 0, "yes": 1,
+            "0": 0, "1": 1,
+        }
+        
+        # Map values
+        df["attrition"] = df["attrition"].map(mapping)
+        
+        # Fill any remaining NaN with 0
+        df["attrition"] = df["attrition"].fillna(0)
+        
+        # Convert to int
+        df["attrition"] = df["attrition"].astype('int64')
+    
+    else:
+        raise ValueError(f"Unexpected dtype for attrition: {df['attrition'].dtype}")
+    
+    print(f"[DEBUG] Column 'attrition' dtype AFTER: {df['attrition'].dtype}")
+    print(f"[DEBUG] Unique values: {df['attrition'].unique()}")
+    print(f"[DEBUG] Attrition rate: {df['attrition'].mean():.1%}")
     # ── 6. Cast ordinals to ordered Categorical ──────────────────────────────
     # Without ordered=True, "Poor" < "Good" is undefined.
     # Values verified against real CSV — not the task-sheet descriptions.
