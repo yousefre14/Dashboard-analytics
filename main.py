@@ -412,7 +412,7 @@ with st.sidebar:
     # Logo — fixed at top of sidebar
     st.markdown("<div class='sidebar-logo-container'>", unsafe_allow_html=True)
     try:
-        st.image("company_logo2.png", width='stretch)
+        st.image("company_logo2.png", width= stretch)
     except Exception:
         st.markdown(
             "<div style='font-size:1.8rem;font-weight:900;text-align:center;"
@@ -571,7 +571,7 @@ def page_overview():
             fig.update_coloraxes(showscale=False)
             fig.update_layout(yaxis_title="", xaxis_title="Attrition Rate (%)")
             _add_avg_line(fig, overall_rate)
-            st.plotly_chart(_theme(fig), width='stretch)
+            st.plotly_chart(_theme(fig), width= stretch)
 
             top_role = role_data.iloc[-1]
             pp_above = top_role['Attrition Rate (%)'] - overall_rate
@@ -611,7 +611,7 @@ def page_overview():
                 x=0.5, y=0.5, font_size=15, font_color=KB, showarrow=False,
             )],
         )
-        st.plotly_chart(_theme(fig), width='stretch)
+        st.plotly_chart(_theme(fig), width= stretch)
         _insight(
             f"<b>{left:,}</b> left · <b>{stayed:,}</b> retained · "
             f"Retention: <b>{retention_rate:.1f}%</b>"
@@ -687,7 +687,7 @@ def page_workload():
                 showlegend=False,
             )
             _add_avg_line(fig, overall_rate)
-            st.plotly_chart(_theme(fig), width='stretch)
+            st.plotly_chart(_theme(fig), width= stretch)
 
         with c2:
             ot_yes = _safe_first(ot[ot["Overtime"]=="Yes"]["Attrition Rate (%)"])
@@ -744,7 +744,7 @@ def page_workload():
                 showlegend=False,
             )
             _add_avg_line(fig, overall_rate)
-            st.plotly_chart(_theme(fig), width='stretch)
+            st.plotly_chart(_theme(fig), width= stretch)
 
         with c2:
             r_remote  = _safe_first(
