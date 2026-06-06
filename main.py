@@ -555,8 +555,8 @@ def page_overview():
         ))
         fig.update_layout(
             title="Workforce Split",
-            height=450,
-            margin=dict(l=50, r=50, t=80, b=50),
+            height=450 + (len(role_data) * 20),
+            margin=dict(l=100, r=50, t=80, b=50),
             annotations=[dict(
                 text=f"<b>{_safe_pct(left, total):.1f}%</b><br>Left",
                 x=0.5, y=0.5, font=dict(size=16, color=KB), showarrow=False,
